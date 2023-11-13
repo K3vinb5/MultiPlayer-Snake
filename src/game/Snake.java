@@ -41,8 +41,12 @@ public abstract class Snake extends Thread implements Serializable{
 	public LinkedList<Cell> getCells() {
 		return cells;
 	}
+
 	protected void move(Cell cell) throws InterruptedException {
-		// TODO
+		//This alredy assumes the given cell is a head neighbouring cell and it is valid
+		getCells().removeLast();
+		getCells().addFirst(cell);
+		board.setChanged();
 	}
 	
 	public LinkedList<BoardPosition> getPath() {
@@ -50,9 +54,13 @@ public abstract class Snake extends Thread implements Serializable{
 		for (Cell cell : cells) {
 			coordinates.add(cell.getPosition());
 		}
-
 		return coordinates;
-	}	
+	}
+
+	public BoardPosition getSnakeHead(){
+		return cells.getFirst().getPosition();
+	}
+
 	protected void doInitialPositioning() {
 		// Random position on the first column. 
 		// At startup, snake occupies a single cell
@@ -67,7 +75,7 @@ public abstract class Snake extends Thread implements Serializable{
 			e1.printStackTrace();
 		}
 		cells.add(board.getCell(at));
-		System.err.println("Snake "+getIdentification()+" starting at:"+getCells().getLast());		
+		System.err.println("Snake " + this.getIdentification() + " starting at:" + getCells().getLast());
 	}
 	
 	public Board getBoard() {

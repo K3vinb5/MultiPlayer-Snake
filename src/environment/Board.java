@@ -12,12 +12,14 @@ import game.Obstacle;
 import game.Snake;
 
 public abstract class Board extends Observable {
-	protected Cell[][] cells;
-	private BoardPosition goalPosition;
+	//constants
 	public static final long PLAYER_PLAY_INTERVAL = 100;
 	public static final long REMOTE_REFRESH_INTERVAL = 200;
 	public static final int NUM_COLUMNS = 30;
 	public static final int NUM_ROWS = 30;
+	//attributes
+	protected Cell[][] cells;
+	private BoardPosition goalPosition;
 	protected LinkedList<Snake> snakes = new LinkedList<Snake>();
 	private LinkedList<Obstacle> obstacles= new LinkedList<Obstacle>();
 	protected boolean isFinished;
@@ -49,14 +51,14 @@ public abstract class Board extends Observable {
 	}
 	
 	public void addGameElement(GameElement gameElement) {
-		boolean placed=false;
+		boolean placed = false;
 		while(!placed) {
 			BoardPosition pos=getRandomPosition();
 			if(!getCell(pos).isOcupied() && !getCell(pos).isOcupiedByGoal()) {
 				getCell(pos).setGameElement(gameElement);
 				if(gameElement instanceof Goal) {
 					setGoalPosition(pos);
-//					System.out.println("Goal placed at:"+pos);
+					System.out.println("Goal placed at: " + pos);
 				}
 				placed=true;
 			}

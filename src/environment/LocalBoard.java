@@ -29,7 +29,7 @@ public class LocalBoard extends Board{
 	
 
 	public LocalBoard() {
-		
+		//Part 1, dai as automatic snakes
 		for (int i = 0; i < NUM_SNAKES; i++) {
 			AutomaticSnake snake = new AutomaticSnake(i, this);
 			snakes.add(snake);
@@ -37,12 +37,13 @@ public class LocalBoard extends Board{
 
 		addObstacles( NUM_OBSTACLES);
 		
-		Goal goal=addGoal();
+		Goal goal = addGoal();
 //		System.err.println("All elements placed");
 	}
 
 	public void init() {
-		for(Snake s:snakes)
+		System.out.println("Snakes Started");
+		for(Snake s : snakes)
 			s.start();
 		// TODO: launch other threads
 		setChanged();

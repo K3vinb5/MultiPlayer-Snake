@@ -17,6 +17,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -32,7 +33,8 @@ public class BoardComponent extends JComponent implements KeyListener{
 
 	public BoardComponent(Board board) {
 		this.board = board;
-		obstacleImage=new ImageIcon(getClass().getResource("/obstacle.png")).getImage();
+		File imageFile = new File("./resources/obstacle.png");
+		obstacleImage = new ImageIcon(imageFile.getAbsolutePath()).getImage();
 		// Necessary for key listener
 		setFocusable(true);
 		addKeyListener(this);

@@ -50,7 +50,7 @@ public class SnakeGui implements Observer {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO
+				// TODO Button
 			}
 				
 		});
