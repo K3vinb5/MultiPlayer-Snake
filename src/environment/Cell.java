@@ -1,15 +1,15 @@
 package environment;
 
-import java.io.Serializable;
-
-import javax.sound.midi.SysexMessage;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import game.GameElement;
 import game.Goal;
 import game.Obstacle;
 import game.Snake;
-import game.AutomaticSnake;
-/** Main class for game representation. 
+
+/** Main class for game representation.
  * 
  * @author luismota
  *
@@ -17,41 +17,69 @@ import game.AutomaticSnake;
 public class Cell {
 	private BoardPosition position;
 	private Snake ocuppyingSnake = null;
-	private GameElement gameElement=null;
-	
+	private GameElement gameElement = null;
+	private Lock cellLock = new ReentrantLock();
+	private Condition occupied = cellLock.newCondition();
+
 	public GameElement getGameElement() {
 		return gameElement;
 	}
-
 
 	public Cell(BoardPosition position) {
 		super();
 		this.position = position;
 	}
 
-	public BoardPosition getPosition() {
+	public Lock getCellLock() {
+		return cellLock;
+	}
+
+	public synchronized BoardPosition getPosition() {
 		return position;
 	}
 
-	public void request(Snake snake)
-			throws InterruptedException {
-		//TODO coordination and mutual exclusion
-		ocuppyingSnake=snake;
+	public void request(Snake snake) throws InterruptedException {
+		cellLock.lock();
+		System.out.println("Snake " + snake.getIdentification() + " Requested Cell: " + this.getPosition());
+		while (ocuppyingSnake!=null || gameElement != null){
+			System.out.println("Waiting for: " + ocuppyingSnake + " or " + gameElement);
+			occupied.await();
+		}
+		ocuppyingSnake = snake;
+		occupied.signalAll();
+		cellLock.unlock();
+		System.out.println("Snake's " + snake.getIdentification() + " Request: " + this.getPosition() + " ended");
 	}
 
-	public void release() {
-		//TODO
+	public void release() throws InterruptedException{
+		cellLock.lock();
+		while(ocuppyingSnake == null)
+			occupied.await();
+		ocuppyingSnake = null;
+		occupied.signalAll();
+		cellLock.unlock();
+	}
+
+	public void setGameElement(GameElement element) throws InterruptedException{
+		cellLock.lock();
+		while(gameElement!=null)
+			occupied.await();
+		gameElement = element;
+		occupied.signalAll();
+		cellLock.unlock();
+	}
+
+	public void removeObstacle() throws InterruptedException{
+		cellLock.lock();
+		while(gameElement == null)
+			occupied.await();
+		gameElement = null; //empties gameElement
+		occupied.signalAll();
+		cellLock.unlock();
 	}
 
 	public boolean isOcupiedBySnake() {
 		return ocuppyingSnake!=null;
-	}
-
-
-	public  void setGameElement(GameElement element) {
-		// TODO coordination and mutual exclusion
-		gameElement=element;
-
 	}
 
 	public boolean isOcupied() {
@@ -63,15 +91,16 @@ public class Cell {
 		return ocuppyingSnake;
 	}
 
-
-	public  Goal removeGoal() {
-		// TODO
-		return null;
+	public Goal removeGoal() throws InterruptedException {
+		System.out.println(gameElement);
+		Goal out = null;
+		//Tries to remove goal if there is one on the cell
+		if (gameElement instanceof Goal){
+			out = (Goal)gameElement;
+			this.removeObstacle();
+		}
+		return out;
 	}
-	public void removeObstacle() {
-	//TODO
-	}
-
 
 	public Goal getGoal() {
 		return (Goal)gameElement;

@@ -34,17 +34,16 @@ public class LocalBoard extends Board{
 			AutomaticSnake snake = new AutomaticSnake(i, this);
 			snakes.add(snake);
 		}
-
-		addObstacles( NUM_OBSTACLES);
-		
+		//addObstacles( NUM_OBSTACLES);
 		Goal goal = addGoal();
 //		System.err.println("All elements placed");
 	}
 
 	public void init() {
 		System.out.println("Snakes Started");
-		for(Snake s : snakes)
+		for(Snake s : snakes){
 			s.start();
+		}
 		// TODO: launch other threads
 		setChanged();
 	}

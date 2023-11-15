@@ -1,61 +1,70 @@
 package game;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.text.Position;
-
 import environment.LocalBoard;
-import gui.SnakeGui;
-import environment.Cell;
 import environment.Board;
 import environment.BoardPosition;
 
 public class AutomaticSnake extends Snake {
+
+	private boolean isRunning = true;
+
 	public AutomaticSnake(int id, LocalBoard board) {
 		super(id,board);
-
 	}
-
 
 	@Override
 	public void run() {
+
 		doInitialPositioning();
-		System.err.println("initial size: " + cells.size());
-		try {
+		/*try {
 			cells.getLast().request(this);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		//Snake Automatic Movement (Ask about the while)
-		while(true){
+		while(this.isRunning){
 			Board board = this.getBoard();
 			BoardPosition goalPosition = board.getGoalPosition();
-			Direction moveDirection = Direction.calculateDirection(goalPosition, this.getSnakeHead());
-			System.out.println("Move Direction is " + moveDirection + " : " + this.getIdentification());
-			//TODO Verificar que não passa da borda do tabuleiro
-			if (moveDirection.x != 0 || moveDirection.y != 0){
-				BoardPosition newPosition = new BoardPosition(this.getSnakeHead().x + moveDirection.x, this.getSnakeHead().y + moveDirection.y);
-				try {
-					move(new Cell(newPosition));
-					System.out.println("Snake: " + this.getIdentification() + " moved to " + newPosition);
-				} catch (InterruptedException e) {
-					throw new RuntimeException(e);
+			List<Direction> moveDirections = Direction.calculateBestDirections(goalPosition, this.getSnakeHead());
+			List<BoardPosition> possibleNewPositions = new ArrayList<>();
+			for(Direction direction : moveDirections){
+				BoardPosition positionToAdd = new BoardPosition(this.getSnakeHead().x + direction.x, this.getSnakeHead().y + direction.y);
+				if (positionToAdd.x >= 0 && positionToAdd.y >= 0 && positionToAdd.x < Board.NUM_ROWS && positionToAdd.y < Board.NUM_COLUMNS){
+					possibleNewPositions.add(positionToAdd);
 				}
+			}
+			if(getPath().size() > 1){
+				board.getBoardSnakesSharedLock().lock();
+				System.out.println("Possible new Positions for snake " + this.getIdentification() + " + possibleNewPositions");
+				possibleNewPositions.removeIf(position -> this.getPath().get(1).equals(position) || this.getPath().get(0).equals(position));
+				board.getBoardSnakesSharedLock().unlock();
+			}
+			try {
+				//tries to move to the best position it can move
+				move(board.getCell(possibleNewPositions.get(0)));
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
 			}
 			//Try to sleep
 			try {
-				//TODO I'm using a non standart time because I think the original is too fast, change later
-				TimeUnit.MILLISECONDS.sleep(2000);
+				sleep(200);
 			} catch (InterruptedException e) {
 				throw new RuntimeException(e);
 			}
 		}
 
 	}
-	
 
-	
+	public boolean isRunning() {
+		return isRunning;
+	}
+
+	public void setRunning(boolean running) {
+		isRunning = running;
+	}
 }
