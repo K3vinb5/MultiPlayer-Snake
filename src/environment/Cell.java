@@ -9,11 +9,6 @@ import game.Goal;
 import game.Obstacle;
 import game.Snake;
 
-/** Main class for game representation.
- * 
- * @author luismota
- *
- */
 public class Cell {
 	private BoardPosition position;
 	private Snake ocuppyingSnake = null;

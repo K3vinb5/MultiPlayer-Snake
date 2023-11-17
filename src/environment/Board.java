@@ -20,15 +20,10 @@ public abstract class Board extends Observable {
 	public static final int NUM_ROWS = 30;
 	//attributes
 	protected Cell[][] cells;
-	private Lock boardCellsLock = new ReentrantLock();
 	private BoardPosition goalPosition;
 	protected LinkedList<Snake> snakes = new LinkedList<Snake>();
-	private Lock boardSnakesLock = new ReentrantLock();
-	private Lock boardSnakesSharedLock = new ReentrantLock();
 	private LinkedList<Obstacle> obstacles= new LinkedList<Obstacle>();
-	private Lock boardObstaclesLock = new ReentrantLock();
 	protected boolean isFinished;
-	private Lock boardLock = new ReentrantLock();
 
 	public Board() {
 		cells = new Cell[NUM_COLUMNS][NUM_ROWS];
@@ -38,21 +33,15 @@ public abstract class Board extends Observable {
 			}
 		}
 	}
+
+	public boolean isFinished() {
+		return isFinished;
+	}
+
 	public Cell getCell(BoardPosition cellCoord) {
 		return cells[cellCoord.x][cellCoord.y];
 	}
-	public Lock getBoardLock() {
-		return boardLock;
-	}
-	public Lock getBoardCellsLock() {
-		return boardCellsLock;
-	}
-	public Lock getBoardObstaclesLock() {
-		return boardObstaclesLock;
-	}
-	public Lock getBoardSnakesSharedLock() {
-		return boardSnakesSharedLock;
-	}
+
 	public BoardPosition getRandomPosition() {
 		return new BoardPosition((int) (Math.random() *NUM_ROWS),(int) (Math.random() * NUM_ROWS));
 	}
@@ -66,26 +55,20 @@ public abstract class Board extends Observable {
 	}
 
 	public boolean isObstacleFree(Cell cell){
-		boardObstaclesLock.lock();
 		for (Obstacle obstacle : obstacles){
 			if (obstacle.getBoardPosition().equals(cell.getPosition())){
-				boardObstaclesLock.unlock();
 				return false;
 			}
 		}
-		boardObstaclesLock.unlock();
 		return true;
 	}
 
 	public boolean isSnakeFree(Cell cell){
-		boardSnakesLock.lock();
 		for (Snake snake : snakes){
 			if (snake.getPath().contains(cell.getPosition())){
-				boardSnakesLock.unlock();
 				return false;
 			}
 		}
-		boardSnakesLock.unlock();
 		return true;
 	}
 	
@@ -124,14 +107,11 @@ public abstract class Board extends Observable {
 	}
 
 	public Snake getSnakeAt(BoardPosition pos){
-		boardSnakesLock.lock();
 		for (Snake snake : snakes){
 			if (snake.getSnakeHead().equals(pos)){
-				boardSnakesLock.unlock();
 				return snake;
 			}
 		}
-		boardSnakesLock.unlock();
 		return null;
 	}
 

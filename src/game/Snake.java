@@ -8,16 +8,11 @@ import gui.SnakeGui;
 import environment.Board;
 import environment.BoardPosition;
 import environment.Cell;
-/** Base class for representing Snakes.
- * Will be extended by HumanSnake and AutomaticSnake.
- * Common methods will be defined here.
- * @author luismota
- *
- */
+
 public abstract class Snake extends Thread implements Serializable{
 	private static final int DELTA_SIZE = 10;
 	protected LinkedList<Cell> cells = new LinkedList<Cell>();
-	protected int size = 1;
+	protected int size = 5;
 	private int id;
 	private Board board;
 
@@ -44,22 +39,27 @@ public abstract class Snake extends Thread implements Serializable{
 
 	protected void move(Cell cell) throws InterruptedException {
 		System.out.println("Attempt to move");
-		boolean inBounds = board.getNeighboringPositions(this.getCells().getFirst()).contains(cell.getPosition());
 		if(cell.getGameElement() instanceof Goal){
-			Goal retrievedGoal = cell.removeGoal();
-			size += retrievedGoal.captureGoal();
+			System.out.println("Goal!");
+			Goal goal = cell.getGoal();
+			size += goal.captureGoal();
+			cell.removeGoal();
 		}
-		if (cells.size() < size){
-			cell.request(this);
-			cells.addFirst(cell);
-		}else{
-			cell.request(this);
-			cells.addFirst(cell);
-			Cell cellToRemove = cells.getLast();
-			cells.removeLast();
-			cellToRemove.release();
-		}
+		cell.request(this);
+		cells.addFirst(cell);
+		removeTail();
 		board.setChanged();
+	}
+
+	private void removeTail(){
+		while(cells.size() > size){
+			try {
+				cells.getLast().release();
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+			cells.removeLast();
+		}
 	}
 
 	public synchronized LinkedList<BoardPosition> getPath() {
