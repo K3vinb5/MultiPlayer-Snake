@@ -36,6 +36,10 @@ public abstract class Board extends Observable {
 		}
 	}
 
+	public void setFinished(boolean finished) {
+		isFinished = finished;
+	}
+
 	public boolean isFinished() {
 		return isFinished;
 	}

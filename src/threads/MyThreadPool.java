@@ -31,16 +31,20 @@ public class MyThreadPool extends Thread{
 
     private Thread getRandomValidObstacleMover(){
         ObstacleMover mover = null;
-        if (!obstacleList.isEmpty()){
-            Obstacle currentObstacle = obstacleList.get(new Random().nextInt(obstacleList.size()));
-            mover = new ObstacleMover(currentObstacle, board);
-            obstacleList.remove(currentObstacle);
+        synchronized (obstacleList) {
+            if (!obstacleList.isEmpty()){
+                Obstacle currentObstacle = obstacleList.get(new Random().nextInt(obstacleList.size()));
+                mover = new ObstacleMover(currentObstacle, board);
+                obstacleList.remove(currentObstacle);
+            }
         }
         return mover;
     }
 
     public void addObstacle(Obstacle obstacle){
-        obstacleList.add(obstacle);
+        synchronized (obstacleList){
+            obstacleList.add(obstacle);
+        }
     }
 
     public synchronized void updateCurrentlyRunningTasks(int n){
@@ -84,7 +88,7 @@ public class MyThreadPool extends Thread{
 
     @Override
     public void run() {
-        while(movementsRemaining){
+        while(movementsRemaining && !board.isFinished()){
             threadPoolLock.lock();
             try {
                 while (currentlyRunningTasks == maxAllowedRunningTask) {

@@ -46,7 +46,7 @@ public class ObstacleMover extends Thread {
 		//Finished Job (Just wait a bit now)
 		//TODO perguntar
 		try {
-			sleep(1000);
+			sleep(Obstacle.OBSTACLE_MOVE_INTERVAL);
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		}
