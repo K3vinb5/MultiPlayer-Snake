@@ -38,7 +38,7 @@ public abstract class Snake extends Thread implements Serializable{
 	}
 
 	protected void move(Cell cell) throws InterruptedException {
-		System.out.println("Attempt to move");
+		//System.out.println("Attempt to move");
 		if(cell.getGameElement() instanceof Goal){
 			System.out.println("Goal!");
 			Goal goal = cell.getGoal();

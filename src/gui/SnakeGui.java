@@ -16,7 +16,7 @@ import environment.Board;
 import environment.LocalBoard;
 /**
  *  Class to create and configure GUI.
- *  Only the listener to the button should be edited, see TODO below.
+ *  Only the listener to the button should be edited, see
  * 
  * @author luismota
  *
@@ -51,7 +51,7 @@ public class SnakeGui implements Observer {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Button
+				// TODO Change Directions Button
 			}
 				
 		});

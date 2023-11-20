@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact name="Projeto2023Snake:jar2">
+    <output-path>$PROJECT_DIR$/out/artifacts/Projeto2023Snake_jar2</output-path>
+    <root id="root">
+      <element id="archive" name="Projeto2023Snake.jar">
+        <element id="module-output" name="Projeto2023Snake" />
+      </element>
+    </root>
+  </artifact>
+</component>

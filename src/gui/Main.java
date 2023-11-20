@@ -15,7 +15,7 @@ public class Main {
 		game.init();
 
 		// Launch server
-		// TODO 2Parte
+		// TODO Parte 2
 		
 	}
 }

@@ -23,20 +23,17 @@ public class RemoteBoard extends Board{
 	
 	@Override
 	public void handleKeyPress(int keyCode) {
-		//TODO
+		//TODO Parte 2
 	}
 
 	@Override
 	public void handleKeyRelease() {
-		// TODO
+		// TODO Parte 2
 	}
 
 	@Override
 	public void init() {
-		// TODO 		
+		// TODO Parte 2
 	}
-
-
-	
 
 }

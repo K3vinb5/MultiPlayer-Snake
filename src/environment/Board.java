@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -82,8 +84,10 @@ public abstract class Board extends Observable {
 					setGoalPosition(pos);
 					System.out.println("Goal placed at: " + pos);
 				}
+				//Added by me
 				if(gameElement instanceof Obstacle){
 					((Obstacle) gameElement).setBoardPosition(pos);
+					((Obstacle)gameElement).setCell(this.getCell(pos));
 				}
 				placed=true;
 			}
@@ -129,20 +133,6 @@ public abstract class Board extends Observable {
 		return possibleCells;
 
 	}
-
-	public List<BoardPosition> getNeighboringPositionsExcludingOwnSnake(Snake snake){
-		Cell snakeHead = snake.getCells().getFirst();
-		List<BoardPosition> out = getNeighboringPositions(snakeHead);
-		for (BoardPosition position : out){
-			if (snake.getPath().contains(position)){
-				//equals is implemented in BoardPosition class...
-				out.remove(position);
-			}
-		}
-		return out;
-	}
-
-	
 
 	protected Goal addGoal() {
 		Goal goal=new Goal(this);
@@ -190,13 +180,5 @@ public abstract class Board extends Observable {
 	public abstract void handleKeyPress(int keyCode);
 
 	public abstract void handleKeyRelease();
-	
-	
-	
-
-	public void addSnake(Snake snake) {
-		snakes.add(snake);
-	}
-
 
 }

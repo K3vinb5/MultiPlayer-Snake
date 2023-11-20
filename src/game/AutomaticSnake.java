@@ -30,7 +30,7 @@ public class AutomaticSnake extends Snake {
 				if (positionToAdd.x >= 0 && positionToAdd.y >= 0 && positionToAdd.x < Board.NUM_ROWS && positionToAdd.y < Board.NUM_COLUMNS)
 					possibleNewPositions.add(positionToAdd);
 			});
-
+			//TODO Daqui pra frente manter, modificar atrás
 			if(getPath().size() > 1){
 				//System.out.println("Possible new Positions for snake " + this.getIdentification() + " + possibleNewPositions");
 				possibleNewPositions.removeIf(position -> (this.getPath().contains(position) && possibleNewPositions.size() > 1));

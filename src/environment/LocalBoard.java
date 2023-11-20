@@ -1,19 +1,12 @@
 package environment;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Observable;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import game.GameElement;
-import game.Goal;
-import game.Obstacle;
-import game.Server;
-import game.Snake;
-import game.AutomaticSnake;
+import game.*;
+import threads.MyThreadPool;
 
 /** Class representing the state of a game running locally
  * 
@@ -22,21 +15,22 @@ import game.AutomaticSnake;
  */
 public class LocalBoard extends Board{
 	
-	private static final int NUM_SNAKES = 1;
-	private static final int NUM_OBSTACLES = 0;
-	private static final int NUM_SIMULTANEOUS_MOVING_OBSTACLES = 3;
+	public static final int NUM_SNAKES = 2;
+	public static final int NUM_OBSTACLES = 25;
+	public static final int NUM_SIMULTANEOUS_MOVING_OBSTACLES = 3; //maybe not
 
-	
+	//private ExecutorService threadPool = Executors.newFixedThreadPool(NUM_SIMULTANEOUS_MOVING_OBSTACLES); //maybe not
+	private MyThreadPool threadPool = new MyThreadPool(getObstacles(), 3, this);
+
+
 
 	public LocalBoard() {
-		//Part 1, dai as automatic snakes
 		for (int i = 0; i < NUM_SNAKES; i++) {
 			AutomaticSnake snake = new AutomaticSnake(i, this);
 			snakes.add(snake);
 		}
-		//addObstacles( NUM_OBSTACLES);
+		addObstacles( NUM_OBSTACLES);
 		Goal goal = addGoal();
-//		System.err.println("All elements placed");
 	}
 
 	public void init() {
@@ -44,11 +38,13 @@ public class LocalBoard extends Board{
 		for(Snake s : snakes){
 			s.start();
 		}
-		// TODO: launch other threads
+		threadPool.start();
 		setChanged();
 	}
 
-	
+	public MyThreadPool getThreadPool() {
+		return threadPool;
+	}
 
 	@Override
 	public void handleKeyPress(int keyCode) {

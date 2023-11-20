@@ -35,7 +35,7 @@ public class Cell {
 
 	public void request(Snake snake) throws InterruptedException {
 		cellLock.lock();
-		System.out.println("Snake " + snake.getIdentification() + " Requested Cell: " + this.getPosition());
+		//System.out.println("Snake " + snake.getIdentification() + " Requested Cell: " + this.getPosition());
 		while (ocuppyingSnake!=null || gameElement != null){
 			System.out.println("Waiting for: " + ocuppyingSnake + " or " + gameElement);
 			occupied.await();
@@ -43,7 +43,7 @@ public class Cell {
 		ocuppyingSnake = snake;
 		occupied.signalAll();
 		cellLock.unlock();
-		System.out.println("Snake's " + snake.getIdentification() + " Request: " + this.getPosition() + " ended");
+		//System.out.println("Snake's " + snake.getIdentification() + " Request: " + this.getPosition() + " ended");
 	}
 
 	public void release() throws InterruptedException{
@@ -59,6 +59,9 @@ public class Cell {
 		cellLock.lock();
 		while(gameElement!=null)
 			occupied.await();
+		if (element instanceof Obstacle){
+			((Obstacle)element).setCell(this);
+		}
 		gameElement = element;
 		occupied.signalAll();
 		cellLock.unlock();
@@ -66,8 +69,13 @@ public class Cell {
 
 	public void removeObstacle() throws InterruptedException{
 		cellLock.lock();
-		while(gameElement == null)
+		while (gameElement == null){
+			System.out.println("Stuck waiting " + gameElement); // :(
 			occupied.await();
+		}
+		if (gameElement instanceof Obstacle){
+			((Obstacle)gameElement).setCell(null);
+		}
 		gameElement = null; //empties gameElement
 		occupied.signalAll();
 		cellLock.unlock();

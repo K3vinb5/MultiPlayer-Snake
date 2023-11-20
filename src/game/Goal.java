@@ -15,8 +15,8 @@ public class Goal extends GameElement  {
 	public int getValue() {
 		return value;
 	}
+	//Não estou a usar
 	public void incrementValue() throws InterruptedException {
-		//TODO perguntar o porque da excecao
 		value +=1 ;
 	}
 
