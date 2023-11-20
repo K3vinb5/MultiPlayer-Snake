@@ -9,8 +9,7 @@ import java.awt.event.MouseListener;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.*;
 
 import environment.Board;
 import environment.LocalBoard;
@@ -28,7 +27,7 @@ public class SnakeGui implements Observer {
 	public static final int BOARD_HEIGHT = 800;
 	public static final int NUM_COLUMNS = 40;
 	public static final int NUM_ROWS = 30;
-	private JFrame frame;
+	private static JFrame frame; //temp
 	private BoardComponent boardGui;
 	private Board board;
 
@@ -72,6 +71,9 @@ public class SnakeGui implements Observer {
 		board.init();
 	}
 
+	public static void finishGameScreen(){
+		JOptionPane.showMessageDialog(null, "The game has finished", "End", JOptionPane.INFORMATION_MESSAGE);
+	}
 	@Override
 	public void update(Observable o, Object arg) {
 		boardGui.repaint();
