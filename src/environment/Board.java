@@ -122,8 +122,8 @@ public abstract class Board extends Observable {
 		}
 		return null;
 	}
-
-	public List<BoardPosition> getNeighboringPositions(Cell cell) {
+	//temp
+	public synchronized List<BoardPosition> getNeighboringPositions(Cell cell) {
 		ArrayList<BoardPosition> possibleCells=new ArrayList<BoardPosition>();
 		BoardPosition pos=cell.getPosition();
 		if(pos.x>0)

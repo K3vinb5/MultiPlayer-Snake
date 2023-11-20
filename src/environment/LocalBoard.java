@@ -16,7 +16,7 @@ import threads.MyThreadPool;
 public class LocalBoard extends Board{
 	
 	public static final int NUM_SNAKES = 2;
-	public static final int NUM_OBSTACLES = 0;
+	public static final int NUM_OBSTACLES = 25;
 	public static final int NUM_SIMULTANEOUS_MOVING_OBSTACLES = 3; //maybe not
 
 	//private ExecutorService threadPool = Executors.newFixedThreadPool(NUM_SIMULTANEOUS_MOVING_OBSTACLES); //maybe not

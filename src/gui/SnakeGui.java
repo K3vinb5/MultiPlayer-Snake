@@ -14,6 +14,8 @@ import javax.swing.JFrame;
 
 import environment.Board;
 import environment.LocalBoard;
+import game.Snake;
+
 /**
  *  Class to create and configure GUI.
  *  Only the listener to the button should be edited, see
@@ -51,7 +53,9 @@ public class SnakeGui implements Observer {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Change Directions Button
+				for (Snake snake: board.getSnakes()){
+					snake.interrupt();
+				}
 			}
 				
 		});

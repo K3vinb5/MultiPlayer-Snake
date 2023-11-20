@@ -2,8 +2,10 @@ package game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import environment.Cell;
 import environment.LocalBoard;
 import environment.Board;
 import environment.BoardPosition;
@@ -11,6 +13,7 @@ import environment.BoardPosition;
 public class AutomaticSnake extends Snake {
 
 	private boolean isRunning = true;
+	private boolean changeDirection = false;
 
 	public AutomaticSnake(int id, LocalBoard board) {
 		super(id,board);
@@ -18,9 +21,16 @@ public class AutomaticSnake extends Snake {
 
 	@Override
 	public void run() {
-
-		doInitialPositioning();
+		try{
+			doInitialPositioning();
+		}catch (InterruptedException e){
+			moveToRandomPosition();
+		}
 		while(!getBoard().isFinished()){
+			if (changeDirection){
+				//Andar numa posicao random valida
+				moveToRandomPosition();
+			}
 			Board board = this.getBoard();
 			BoardPosition goalPosition = board.getGoalPosition();
 			List<Direction> moveDirections = Direction.calculateBestDirections(goalPosition, this.getSnakeHead());
@@ -39,15 +49,30 @@ public class AutomaticSnake extends Snake {
 				//tries to move to the best position it can move
 				move(board.getCell(possibleNewPositions.get(0)));
 			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
+				System.out.println("Button Pressed");
+				changeDirection = true;
+				continue;
 			}
 			//Try to sleep
 			try {
 				sleep(100);
 			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
+				continue;
 			}
 		}
+	}
+
+	private void moveToRandomPosition(){
+		List<BoardPosition> randomPositions = getBoard().getNeighboringPositions(getBoard().getCell(getSnakeHead()));
+		List<BoardPosition> snakePositions = getPath();
+		randomPositions.removeIf(snakePositions::contains);
+		Cell randomNeighbouringCell = getBoard().getCell(randomPositions.get(new Random().nextInt(randomPositions.size())));
+		try{
+			move(randomNeighbouringCell);
+		}catch (InterruptedException exception){
+			changeDirection = true;
+		}
+		changeDirection = false;
 	}
 
 	public boolean isRunning() {
