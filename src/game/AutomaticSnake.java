@@ -26,28 +26,15 @@ public class AutomaticSnake extends Snake {
 		}catch (InterruptedException e){
 			moveToRandomPosition();
 		}
+
 		while(!getBoard().isFinished()){
 			if (changeDirection){
 				//Andar numa posicao random valida
 				moveToRandomPosition();
 			}
-			Board board = this.getBoard();
-			BoardPosition goalPosition = board.getGoalPosition();
-			List<Direction> moveDirections = Direction.calculateBestDirections(goalPosition, this.getSnakeHead());
-			List<BoardPosition> possibleNewPositions = new ArrayList<>();
-			moveDirections.forEach(direction -> {
-				BoardPosition positionToAdd = new BoardPosition(this.getSnakeHead().x + direction.x, this.getSnakeHead().y + direction.y);
-				if (positionToAdd.x >= 0 && positionToAdd.y >= 0 && positionToAdd.x < Board.NUM_ROWS && positionToAdd.y < Board.NUM_COLUMNS)
-					possibleNewPositions.add(positionToAdd);
-			});
-			//TODO Daqui pra frente manter, modificar atrás
-			if(getPath().size() > 1){
-				//System.out.println("Possible new Positions for snake " + this.getIdentification() + " + possibleNewPositions");
-				possibleNewPositions.removeIf(position -> (this.getPath().contains(position) && possibleNewPositions.size() > 1));
-			}
+			//tries to move to the best position it can move
 			try {
-				//tries to move to the best position it can move
-				move(board.getCell(possibleNewPositions.get(0)));
+				move(getBestCellToMoveFromHead());
 			} catch (InterruptedException e) {
 				System.out.println("Button Pressed");
 				changeDirection = true;
@@ -61,7 +48,7 @@ public class AutomaticSnake extends Snake {
 			}
 		}
 	}
-
+	//When Interrupted
 	private void moveToRandomPosition(){
 		List<BoardPosition> randomPositions = getBoard().getNeighboringPositions(getBoard().getCell(getSnakeHead()));
 		List<BoardPosition> snakePositions = getPath();
@@ -73,6 +60,20 @@ public class AutomaticSnake extends Snake {
 			changeDirection = true;
 		}
 		changeDirection = false;
+	}
+	private Cell getBestCellToMoveFromHead(){
+		List<BoardPosition> positions = getBoard().getNeighboringPositions(getBoard().getCell(getSnakeHead()));
+		positions.removeIf(position -> getPath().contains(position));
+		BoardPosition goalPosition = getBoard().getGoalPosition();
+		BoardPosition best = null;
+		Double bestDistance = Double.POSITIVE_INFINITY;
+		for (BoardPosition position : positions){
+			if (position.distanceTo(goalPosition) < bestDistance){
+				best = position;
+				bestDistance = position.distanceTo(goalPosition);
+			}
+		}
+		return getBoard().getCell(best);
 	}
 
 	public boolean isRunning() {
