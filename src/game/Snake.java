@@ -11,7 +11,6 @@ import environment.Cell;
 
 public abstract class Snake extends Thread implements Serializable{
 	private static final int DELTA_SIZE = 10;
-	private static final int MAX_GOAL_VALUE = 1;
 	protected LinkedList<Cell> cells = new LinkedList<Cell>();
 	protected int size = 5;
 	private int id;
@@ -43,7 +42,7 @@ public abstract class Snake extends Thread implements Serializable{
 		if(cell.getGameElement() instanceof Goal){
 			System.out.println("Goal!");
 			Goal goal = cell.getGoal();
-			if (goal.getValue() == MAX_GOAL_VALUE){
+			if (goal.getValue() == Board.NUM_GOALS_TO_WIN){
 				board.setFinished(true);
 				SnakeGui.finishGameScreen();
 				return;

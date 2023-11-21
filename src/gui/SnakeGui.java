@@ -27,7 +27,7 @@ public class SnakeGui implements Observer {
 	public static final int BOARD_HEIGHT = 800;
 	public static final int NUM_COLUMNS = 40;
 	public static final int NUM_ROWS = 30;
-	private static JFrame frame; //temp
+	private static JFrame frame; //static because there is always just one SnakeGui objecto for now
 	private BoardComponent boardGui;
 	private Board board;
 

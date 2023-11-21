@@ -20,6 +20,7 @@ public abstract class Board extends Observable {
 	public static final long REMOTE_REFRESH_INTERVAL = 200;
 	public static final int NUM_COLUMNS = 30;
 	public static final int NUM_ROWS = 30;
+	public static final int NUM_GOALS_TO_WIN = 9;
 	//attributes
 	protected Cell[][] cells;
 	private BoardPosition goalPosition;
@@ -137,7 +138,9 @@ public abstract class Board extends Observable {
 		return possibleCells;
 
 	}
-
+	public boolean isWithinBounds(BoardPosition position){
+		return position.x >= 0 && position.y >= 0 && position.x < Board.NUM_ROWS && position.y < Board.NUM_COLUMNS;
+	}
 	protected Goal addGoal() {
 		Goal goal=new Goal(this);
 		try{
