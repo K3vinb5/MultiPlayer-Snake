@@ -35,7 +35,7 @@ public class Cell {
 
 	public void request(Snake snake) throws InterruptedException {
 		cellLock.lock();
-		while (ocuppyingSnake!=null || gameElement != null){
+		while (isOcupied()){
 			System.out.println("Waiting for: " + ocuppyingSnake + " or " + gameElement);
 			occupied.await();
 		}
@@ -43,7 +43,7 @@ public class Cell {
 		occupied.signalAll();
 		cellLock.unlock();
 	}
-
+	//TODO Release nao precisa de condicao de espera
 	public void release() throws InterruptedException{
 		cellLock.lock();
 		while(ocuppyingSnake == null)
@@ -52,7 +52,7 @@ public class Cell {
 		occupied.signalAll();
 		cellLock.unlock();
 	}
-
+	//TODO setGameElement nao deve de esperar, posso alterar para um boleano para caso falhe tente outra vez
 	public void setGameElement(GameElement element) throws InterruptedException{
 		cellLock.lock();
 		while(gameElement!=null)

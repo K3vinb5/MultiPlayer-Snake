@@ -39,7 +39,7 @@ public class LocalBoard extends Board{
 		threadPool.start();
 		setChanged();
 	}
-
+	
 	public MyThreadPool getThreadPool() {
 		return threadPool;
 	}

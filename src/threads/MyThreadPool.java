@@ -78,9 +78,8 @@ public class MyThreadPool extends Thread{
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            if (currentObstacle.getRemainingMoves() > 0){
-                addObstacle(currentObstacle);
-            }
+            addObstacle(currentObstacle);
+
             updateCurrentlyRunningTasks(-1);
             notifySelf();
         }

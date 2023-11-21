@@ -26,11 +26,12 @@ public class AutomaticSnake extends Snake {
 		}catch (InterruptedException e){
 			moveToRandomPosition();
 		}
-
 		while(!getBoard().isFinished()){
 			if (changeDirection){
 				//Andar numa posicao random valida
 				moveToRandomPosition();
+			}else{
+				//meter o resto do codigo no else
 			}
 			//tries to move to the best position it can move
 			try {

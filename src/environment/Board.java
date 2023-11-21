@@ -98,6 +98,7 @@ public abstract class Board extends Observable {
 			}
 		}
 	}
+	//TODO ver o comentario no setGameElement
 	public void changeGoalPosition(Goal goal){
 		boolean placed = false;
 		while(!placed) {
