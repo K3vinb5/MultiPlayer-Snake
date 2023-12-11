@@ -46,6 +46,7 @@ public abstract class Snake extends Thread implements Serializable{
 			if (goal.getValue() == Board.NUM_GOALS_TO_WIN){
 				board.setFinished(true);
 				SnakeGui.finishGameScreen();
+				System.exit(0);
 				return;
 			}
 			size += goal.captureGoal();

@@ -21,19 +21,19 @@ public class LocalBoard extends Board implements Serializable {
 	public static final int NUM_SIMULTANEOUS_MOVING_OBSTACLES = 3; //maybe not
 
 	//private ExecutorService threadPool = Executors.newFixedThreadPool(NUM_SIMULTANEOUS_MOVING_OBSTACLES); //maybe not
-	private transient MyThreadPool threadPool = new MyThreadPool(getObstacles(), NUM_SIMULTANEOUS_MOVING_OBSTACLES, this);
+	private transient MyThreadPool threadPool;
 
-	public LocalBoard() {
+	public LocalBoard(long timeToSleep) {
+		threadPool = new MyThreadPool(getObstacles(), NUM_SIMULTANEOUS_MOVING_OBSTACLES, this, timeToSleep);
 		for (int i = 0; i < NUM_SNAKES; i++) {
-			//AutomaticSnake snake = new AutomaticSnake(i, this);
-			//snakes.add(snake);
+			AutomaticSnake snake = new AutomaticSnake(i, this, timeToSleep);
+			snakes.add(snake);
 		}
 		addObstacles( NUM_OBSTACLES);
 		Goal goal = addGoal();
 	}
 
 	public void init() {
-		System.out.println("Snakes Started");
 		for(Snake s : snakes){
 			s.start();
 		}

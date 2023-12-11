@@ -11,14 +11,22 @@ import java.io.Serializable;
 public class HumanSnake extends Snake implements Serializable {
 
 	public String currentDirection = "null";
+	private long timeToSleep;
 
-	public HumanSnake(int id,Board board) {
+	public HumanSnake(int id,Board board, long timeToSleep) {
 		super(id,board);
+		this.timeToSleep = timeToSleep;
 	}
 
 	@Override
 	public void run() {
+		System.out.println("Human Snake Awoke");
 		doInitialPositioning();
+		try {
+			Thread.sleep(timeToSleep);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 		while(!getBoard().isFinished()){
 			try{
 				this.move(getCellToMove());

@@ -44,26 +44,24 @@ public class Cell implements Serializable {
 		occupied.signalAll();
 		cellLock.unlock();
 	}
-	//TODO Release nao precisa de condicao de espera
+
 	public void release() throws InterruptedException{
 		cellLock.lock();
-		while(ocuppyingSnake == null)
-			occupied.await();
+		if(ocuppyingSnake != null)
+			occupied.signalAll();
 		ocuppyingSnake = null;
-		occupied.signalAll();
 		cellLock.unlock();
 	}
-	//TODO setGameElement nao deve de esperar, posso alterar para um boleano para caso falhe tente outra vez
-	public void setGameElement(GameElement element) throws InterruptedException{
+	public boolean setGameElement(GameElement element) throws InterruptedException{
 		cellLock.lock();
-		while(gameElement!=null)
-			occupied.await();
+		if(gameElement != null)
+			return false;
 		if (element instanceof Obstacle){
 			((Obstacle)element).setCell(this);
 		}
 		gameElement = element;
-		occupied.signalAll();
 		cellLock.unlock();
+		return true;
 	}
 
 	public void removeObstacle() throws InterruptedException{
@@ -87,6 +85,7 @@ public class Cell implements Serializable {
 	public boolean isOcupied() {
 		return isOcupiedBySnake() || (gameElement!=null && gameElement instanceof Obstacle);
 	}
+
 
 
 	public Snake getOcuppyingSnake() {

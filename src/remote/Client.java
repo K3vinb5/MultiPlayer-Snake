@@ -29,7 +29,7 @@ public class Client implements Serializable {
 	public Client(String address) {
 		runClient(Server.PORT, address);
 		while (board == null){
-			System.out.println("Board received is null");
+			//System.out.println("Board received is null");
             try {
                 sleep(100);
             } catch (InterruptedException e) {
@@ -92,10 +92,10 @@ public class Client implements Serializable {
 			e.printStackTrace();
 		}
 		if (board == null) {
-			System.err.println("Erro, board recebido é nulo");
+			//System.err.println("Erro, board recebido é nulo");
 		}
 		else {
-			System.out.println("Board Recebido com sucesso");
+			//System.out.println("Board Recebido com sucesso");
 		}
 		return board;
 	}
@@ -107,13 +107,5 @@ public class Client implements Serializable {
 		board1.setGoalPosition(board2.getGoalPosition());
 		board1.setFinished(board2.isFinished());
 	}
-
-	public PrintWriter getOut() {
-		return out;
-	}
-
-
-
-
 
 }

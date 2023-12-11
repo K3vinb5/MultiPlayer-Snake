@@ -15,6 +15,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class MyThreadPool extends Thread implements Serializable {
 
+    private long timeToSleep;
     private final int maxAllowedRunningTask;
     private int currentlyRunningTasks = 0;
     private boolean movementsRemaining = true;
@@ -24,10 +25,11 @@ public class MyThreadPool extends Thread implements Serializable {
     private Lock threadPoolLock = new ReentrantLock();
     private Condition condition = threadPoolLock.newCondition();
 
-    public MyThreadPool(List<Obstacle> obstacleList, int maxAllowedRunningTask, LocalBoard board){
+    public MyThreadPool(List<Obstacle> obstacleList, int maxAllowedRunningTask, LocalBoard board, long timeToSleep){
         this.obstacleList = obstacleList;
         this.maxAllowedRunningTask = maxAllowedRunningTask;
         this.board = board;
+        this.timeToSleep = timeToSleep;
     }
 
     private Thread getRandomValidObstacleMover(){
@@ -45,6 +47,11 @@ public class MyThreadPool extends Thread implements Serializable {
     public void addObstacle(Obstacle obstacle){
         synchronized (obstacleList){
             obstacleList.add(obstacle);
+        }
+    }
+    public void removeObstacle(Obstacle obstacle){
+        synchronized (obstacleList){
+            obstacleList.remove(obstacle);
         }
     }
 
@@ -79,7 +86,7 @@ public class MyThreadPool extends Thread implements Serializable {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            addObstacle(currentObstacle);
+            removeObstacle(currentObstacle);
 
             updateCurrentlyRunningTasks(-1);
             notifySelf();
@@ -88,6 +95,12 @@ public class MyThreadPool extends Thread implements Serializable {
 
     @Override
     public void run() {
+        try{
+            Thread.sleep(timeToSleep);
+        }catch (Exception e){
+
+        }
+        System.out.println("ThreadPool Awoke");
         while(movementsRemaining && !board.isFinished()){
             threadPoolLock.lock();
             try {
@@ -100,13 +113,12 @@ public class MyThreadPool extends Thread implements Serializable {
                 }
                 new Runner().start();
                 updateCurrentlyRunningTasks(1);
+                System.out.println("Thread Pool ");
             }finally {
                 threadPoolLock.unlock();
             }
         }
 
     }
-
-
 
 }

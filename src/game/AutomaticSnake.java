@@ -14,31 +14,29 @@ import environment.BoardPosition;
 public class AutomaticSnake extends Snake implements Serializable {
 
 	private boolean isRunning = true;
-	private boolean changeDirection = false;
+	private long timeToSleep;
 
-	public AutomaticSnake(int id, LocalBoard board) {
+	public AutomaticSnake(int id, LocalBoard board, long timeToSleep) {
 		super(id,board);
+		this.timeToSleep = timeToSleep;
 	}
 
 	@Override
 	public void run() {
-
+		System.out.println("Automatic Snake Awoke");
 		doInitialPositioning();
-
+		try {
+			Thread.sleep(timeToSleep);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 		while(!getBoard().isFinished()){
-			if (changeDirection){
-				//Andar numa posicao random valida
-				moveToRandomPosition();
-			}else{
-				//meter o resto do codigo no else
-			}
 			//tries to move to the best position it can move
 			try {
 				move(getBestCellToMoveFromHead());
 			} catch (InterruptedException e) {
 				System.out.println("Button Pressed");
-				changeDirection = true;
-				continue;
+				moveToRandomPosition();
 			}
 			//Try to sleep
 			try {
@@ -49,17 +47,18 @@ public class AutomaticSnake extends Snake implements Serializable {
 		}
 	}
 	//When Interrupted
-	private void moveToRandomPosition(){
-		List<BoardPosition> randomPositions = getBoard().getNeighboringPositions(getBoard().getCell(getSnakeHead()));
-		List<BoardPosition> snakePositions = getPath();
-		randomPositions.removeIf(snakePositions::contains);
-		Cell randomNeighbouringCell = getBoard().getCell(randomPositions.get(new Random().nextInt(randomPositions.size())));
-		try{
-			move(randomNeighbouringCell);
-		}catch (InterruptedException exception){
-			changeDirection = true;
+	private void moveToRandomPosition() {
+		try {
+			List<BoardPosition> neighbours = getBoard().getNeighboringPositions(getBoard().getCell(this.getSnakeHead()));
+			neighbours.removeIf(position -> getPath().contains(position) || getBoard().getCell(position).getGameElement() != null);
+			if (neighbours.isEmpty()) {
+				move(getBoard().getCell(getBoard().getNeighboringPositions(getBoard().getCell(this.getSnakeHead())).get(0)));
+			}else {
+				move(getBoard().getCell(neighbours.get(0)));
+			}
+		}catch (Exception e) {
+			moveToRandomPosition();
 		}
-		changeDirection = false;
 	}
 	private Cell getBestCellToMoveFromHead(){
 		List<BoardPosition> positions = getBoard().getNeighboringPositions(getBoard().getCell(getSnakeHead()));

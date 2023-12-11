@@ -28,8 +28,6 @@ public class ObstacleMover extends Thread implements Serializable {
 	@Override
 	public void run() {
 		//While loop runs until a free cell is secured and "locked"
-		//System.out.println("Mover - Job Started " + obstacle.getBoardPosition());
-		//System.out.println("Looking for Position " + obstacle.getBoardPosition());
 		while(!movementDone){
 			BoardPosition randomBoardPosition = board.getRandomPosition();
 			Cell cell = board.getCell(randomBoardPosition);
@@ -39,16 +37,18 @@ public class ObstacleMover extends Thread implements Serializable {
 				//System.out.println("Position Found " + obstacle.getBoardPosition() + " -> " + cell.getPosition());
 				try {
 					obstacle.getCell().removeObstacle();
-					cell.setGameElement(obstacle);
+					boolean trySetGameElement;
+					trySetGameElement = cell.setGameElement(obstacle);
+					while (!trySetGameElement){
+						trySetGameElement = cell.setGameElement(obstacle);
+					}
 					obstacle.decreaseRemainingMoves();
 					board.setChanged();
 				} catch (InterruptedException e) {
-					//TODO Auto-Generated Catch Exception
 					throw new RuntimeException(e);
 				}
 				try {
-					/*sleep(Obstacle.OBSTACLE_MOVE_INTERVAL);*/
-					sleep(5000);
+					sleep(Obstacle.OBSTACLE_MOVE_INTERVAL);
 				} catch (InterruptedException e) {
 					throw new RuntimeException(e);
 				}

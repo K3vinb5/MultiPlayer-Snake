@@ -113,7 +113,10 @@ public abstract class Board extends Observable implements Serializable {
 		while(!placed) {
 			BoardPosition pos=getRandomPosition();
 			if(!getCell(pos).isOcupied() && !getCell(pos).isOcupiedByGoal()) {
-				getCell(pos).setGameElement(gameElement);
+				boolean trySetGameElement = getCell(pos).setGameElement(gameElement);
+				if (!trySetGameElement){
+					addGameElement(gameElement);
+				}
 				if(gameElement instanceof Goal) {
 					setGoalPosition(pos);
 					System.out.println("Goal placed at: " + pos);
@@ -134,7 +137,10 @@ public abstract class Board extends Observable implements Serializable {
 			BoardPosition pos=getRandomPosition();
 			if(!getCell(pos).isOcupied() && !getCell(pos).isOcupiedByGoal()) {
 				try{
-					getCell(pos).setGameElement(goal);
+					boolean tryGameElement = getCell(pos).setGameElement(goal);
+					if(!tryGameElement){
+						changeGoalPosition(goal);
+					}
 					setGoalPosition(pos);
 				}catch (InterruptedException e){
 					e.printStackTrace();
