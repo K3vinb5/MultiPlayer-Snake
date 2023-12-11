@@ -56,7 +56,7 @@ public abstract class Snake extends Thread implements Serializable{
 		board.setChanged();
 	}
 
-	private void removeTail(){
+	protected void removeTail(){
 		while(cells.size() > size){
 			try {
 				cells.getLast().release();
@@ -79,15 +79,18 @@ public abstract class Snake extends Thread implements Serializable{
 		return cells.getFirst().getPosition();
 	}
 
-	protected void doInitialPositioning() throws InterruptedException{
+	protected void doInitialPositioning(){
 		// Random position on the first column.
 		// At startup, snake occupies a single cell
 		int posX = 0;
 		int posY = (int) (Math.random() * Board.NUM_ROWS);
 		BoardPosition at = new BoardPosition(posX, posY);
 
-
-		board.getCell(at).request(this);
+		try{
+			board.getCell(at).request(this);
+		}catch (InterruptedException e){
+			doInitialPositioning();
+		}
 
 		cells.add(board.getCell(at));
 		System.err.println("Snake " + this.getIdentification() + " starting at:" + getCells().getLast());

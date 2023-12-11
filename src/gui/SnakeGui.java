@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.Serializable;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -22,7 +23,7 @@ import game.Snake;
  * @author luismota
  *
  */
-public class SnakeGui implements Observer {
+public class SnakeGui implements Observer, Serializable {
 	public static final int BOARD_WIDTH = 800;
 	public static final int BOARD_HEIGHT = 800;
 	public static final int NUM_COLUMNS = 40;

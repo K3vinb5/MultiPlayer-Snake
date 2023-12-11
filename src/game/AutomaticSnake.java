@@ -1,5 +1,6 @@
 package game;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -10,7 +11,7 @@ import environment.LocalBoard;
 import environment.Board;
 import environment.BoardPosition;
 
-public class AutomaticSnake extends Snake {
+public class AutomaticSnake extends Snake implements Serializable {
 
 	private boolean isRunning = true;
 	private boolean changeDirection = false;
@@ -21,11 +22,9 @@ public class AutomaticSnake extends Snake {
 
 	@Override
 	public void run() {
-		try{
-			doInitialPositioning();
-		}catch (InterruptedException e){
-			moveToRandomPosition();
-		}
+
+		doInitialPositioning();
+
 		while(!getBoard().isFinished()){
 			if (changeDirection){
 				//Andar numa posicao random valida

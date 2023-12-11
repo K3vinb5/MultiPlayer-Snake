@@ -4,6 +4,7 @@ import environment.BoardPosition;
 import environment.Cell;
 import environment.LocalBoard;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -12,7 +13,7 @@ import java.util.concurrent.Executors;
 
 import static environment.LocalBoard.NUM_OBSTACLES;
 
-public class ObstacleMover extends Thread {
+public class ObstacleMover extends Thread implements Serializable {
 	private Obstacle obstacle;
 	private LocalBoard board;
 	private int numberMovement = 0;
@@ -46,7 +47,8 @@ public class ObstacleMover extends Thread {
 					throw new RuntimeException(e);
 				}
 				try {
-					sleep(Obstacle.OBSTACLE_MOVE_INTERVAL);
+					/*sleep(Obstacle.OBSTACLE_MOVE_INTERVAL);*/
+					sleep(5000);
 				} catch (InterruptedException e) {
 					throw new RuntimeException(e);
 				}

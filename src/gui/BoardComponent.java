@@ -18,6 +18,7 @@ import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.io.Serializable;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -26,7 +27,7 @@ import javax.swing.JComponent;
   * @author luismota
   *
   */
-public class BoardComponent extends JComponent implements KeyListener{
+public class BoardComponent extends JComponent implements KeyListener, Serializable {
 
 	private Board board;
 	private Image obstacleImage;

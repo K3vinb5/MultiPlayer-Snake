@@ -6,13 +6,14 @@ import game.Obstacle;
 import game.ObstacleMover;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class MyThreadPool extends Thread{
+public class MyThreadPool extends Thread implements Serializable {
 
     private final int maxAllowedRunningTask;
     private int currentlyRunningTasks = 0;

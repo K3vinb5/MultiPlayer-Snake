@@ -1,5 +1,6 @@
 package environment;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,7 +15,7 @@ import game.Goal;
 import game.Obstacle;
 import game.Snake;
 
-public abstract class Board extends Observable {
+public abstract class Board extends Observable implements Serializable {
 	//constants
 	public static final long PLAYER_PLAY_INTERVAL = 100;
 	public static final long REMOTE_REFRESH_INTERVAL = 200;
@@ -37,6 +38,38 @@ public abstract class Board extends Observable {
 		}
 	}
 
+	public Cell[][] getCells() {
+		return cells;
+	}
+
+	public void setCells(Cell[][] cells) {
+		this.cells = cells;
+	}
+
+	public BoardPosition getGoalPosition() {
+		return goalPosition;
+	}
+
+	public void setGoalPosition(BoardPosition goalPosition) {
+		this.goalPosition = goalPosition;
+	}
+
+	public LinkedList<Snake> getSnakes() {
+		return snakes;
+	}
+
+	public void setSnakes(LinkedList<Snake> snakes) {
+		this.snakes = snakes;
+	}
+
+	public LinkedList<Obstacle> getObstacles() {
+		return obstacles;
+	}
+
+	public void setObstacles(LinkedList<Obstacle> obstacles) {
+		this.obstacles = obstacles;
+	}
+
 	public void setFinished(boolean finished) {
 		isFinished = finished;
 	}
@@ -49,16 +82,12 @@ public abstract class Board extends Observable {
 		return cells[cellCoord.x][cellCoord.y];
 	}
 
+	public void addSnake(Snake snake){
+		this.snakes.add(snake);
+	}
+
 	public BoardPosition getRandomPosition() {
-		return new BoardPosition((int) (Math.random() *NUM_ROWS),(int) (Math.random() * NUM_ROWS));
-	}
-
-	public BoardPosition getGoalPosition() {
-		return goalPosition;
-	}
-
-	public void setGoalPosition(BoardPosition goalPosition) {
-		this.goalPosition = goalPosition;
+		return new BoardPosition((int) (Math.random() * NUM_ROWS), (int) (Math.random() * NUM_ROWS));
 	}
 
 	public boolean isObstacleFree(Cell cell){
@@ -166,11 +195,6 @@ public abstract class Board extends Observable {
 			numberObstacles--;
 		}
 	}
-	
-	public LinkedList<Snake> getSnakes() {
-		return snakes;
-	}
-
 
 	@Override
 	public void setChanged() {
@@ -178,11 +202,6 @@ public abstract class Board extends Observable {
 		notifyObservers();
 	}
 
-	public LinkedList<Obstacle> getObstacles() {
-		return obstacles;
-	}
-
-	
 	public abstract void init(); 
 	
 	public abstract void handleKeyPress(int keyCode);

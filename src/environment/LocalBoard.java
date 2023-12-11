@@ -1,6 +1,7 @@
 package environment;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,19 +14,19 @@ import threads.MyThreadPool;
  * @author luismota
  *
  */
-public class LocalBoard extends Board{
+public class LocalBoard extends Board implements Serializable {
 	
 	public static final int NUM_SNAKES = 2;
 	public static final int NUM_OBSTACLES = 25;
 	public static final int NUM_SIMULTANEOUS_MOVING_OBSTACLES = 3; //maybe not
 
 	//private ExecutorService threadPool = Executors.newFixedThreadPool(NUM_SIMULTANEOUS_MOVING_OBSTACLES); //maybe not
-	private MyThreadPool threadPool = new MyThreadPool(getObstacles(), NUM_SIMULTANEOUS_MOVING_OBSTACLES, this);
+	private transient MyThreadPool threadPool = new MyThreadPool(getObstacles(), NUM_SIMULTANEOUS_MOVING_OBSTACLES, this);
 
 	public LocalBoard() {
 		for (int i = 0; i < NUM_SNAKES; i++) {
-			AutomaticSnake snake = new AutomaticSnake(i, this);
-			snakes.add(snake);
+			//AutomaticSnake snake = new AutomaticSnake(i, this);
+			//snakes.add(snake);
 		}
 		addObstacles( NUM_OBSTACLES);
 		Goal goal = addGoal();
