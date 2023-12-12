@@ -88,8 +88,8 @@ public class Client implements Serializable {
 		Board board = null;
 		try {
 			board = (Board) in.readObject();
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ignore) {
+
 		}
 		if (board == null) {
 			//System.err.println("Erro, board recebido é nulo");
