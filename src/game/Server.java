@@ -4,8 +4,6 @@ import environment.Board;
 import environment.LocalBoard;
 import gui.Main;
 import gui.SnakeGui;
-import remote.Client;
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -42,7 +40,7 @@ public class Server implements Serializable {
         private ObjectOutputStream outputStream;
 
         public ClientHandler(Socket socket) throws IOException {
-            connect(socket);
+            connect(socket); //init in and out streams
             long timeToSleep = targetTimeMillis - System.currentTimeMillis();
             System.out.println("Client has to wait " + timeToSleep);
             if (timeToSleep > 0){
@@ -84,7 +82,7 @@ public class Server implements Serializable {
                 try {
                     while(true) {
                         int keyCode = Integer.parseInt(reader.readLine());
-                        System.out.println("Keycode received " + keyCode);
+                        System.err.println("Keycode received " + keyCode);
                         snake.updateCurrentDirection(keyCode);
                     }
                 } catch (Exception e) {

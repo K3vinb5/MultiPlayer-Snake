@@ -68,7 +68,7 @@ public class Client implements Serializable {
 	// Initial run the client side
 	public void runClient(int port,String address) {
 		try {
-			this.connectToServer(port, address);
+			this.connectToServer(address, port);
 			new Listener().start();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -77,7 +77,7 @@ public class Client implements Serializable {
 	}
 
 	//Connects to the server provided in Client args
-	private void connectToServer(int port,String address) throws IOException {
+	private void connectToServer(String address, int port) throws IOException {
 		InetAddress inetAddress = InetAddress.getByName(address);
 		this.socket = new Socket(inetAddress, port);
 		this.in = new ObjectInputStream(this.socket.getInputStream());
